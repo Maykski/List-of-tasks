@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Tarefas</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="app-shell">
+
+        <header class="app-header">
+            <h1>Lista de Tarefas</h1>
+            <p class="subtitle">
+                Organize suas tarefas, prioridades e prazos.
+            </p>
+        </header>
+
+        <section class="form-card">
+            <h2>Adicionar tarefa</h2>
+
+            <form id="taskForm" class="task-form">
+
+                <div class="field field-description">
+                    <label for="taskText">Tarefa</label>
+
+                    <input
+                        type="text"
+                        id="taskText"
+                        placeholder="Ex.: Estudar JavaScript"
+                        required
+                    >
+                </div>
+
+                <div class="field">
+                    <label for="taskPriority">Prioridade</label>
+
+                    <select id="taskPriority">
+                        <option value="Alta">Alta</option>
+                        <option value="Média" selected>Média</option>
+                        <option value="Baixa">Baixa</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="taskDate">Prazo</label>
+
+                    <input
+                        type="date"
+                        id="taskDate"
+                        required
+                    >
+                </div>
+
+                <button class="primary-button" type="submit">
+                    Adicionar
+                </button>
+
+            </form>
+        </section>
+
+        <section class="tasks-section">
+
+            <div class="tasks-heading">
+                <h2>Minhas tarefas</h2>
+
+                <button
+                    id="clearCompleted"
+                    class="secondary-button"
+                    type="button"
+                >
+                    Limpar concluídas
+                </button>
+            </div>
+
+            <div id="taskList" class="task-list"></div>
+
+            <div id="emptyState" class="empty-state">
+                <div class="empty-icon">✓</div>
+
+                <h3>Nenhuma tarefa</h3>
+
+                <p>
+                    Adicione uma tarefa usando o formulário acima.
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
+

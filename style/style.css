@@ -1,0 +1,249 @@
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 30px;
+    font-family: Arial, sans-serif;
+    background: #f2f4f7;
+    color: #222;
+}
+
+.app-shell {
+    max-width: 1000px;
+    margin: auto;
+}
+
+.app-header {
+    margin-bottom: 25px;
+}
+
+h1 {
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #666;
+}
+
+.stats {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.stat-card {
+    flex: 1;
+    padding: 15px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.stat-card strong {
+    display: block;
+    font-size: 20px;
+}
+
+.stat-card span {
+    color: #666;
+    font-size: 14px;
+}
+
+.form-card,
+.tasks-section {
+    background: white;
+    padding: 25px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+}
+
+.task-form {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.field label {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.field input,
+.field select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: white;
+}
+
+
+button {
+    cursor: pointer;
+}
+
+.primary-button,
+.secondary-button,
+.delete-button {
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.primary-button {
+    border: none;
+    color: white;
+    background: #2563eb;
+}
+
+.primary-button:hover {
+    background: #1d4ed8;
+}
+
+.secondary-button {
+    border: 1px solid #ccc;
+    background: white;
+}
+
+.delete-button {
+    border: none;
+    color: #c00;
+    background: #ffe5e5;
+}
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}.task-card {
+    display: grid;
+    grid-template-columns: 5px 30px 1fr auto;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.priority-indicator {
+    width: 5px;
+    height: 100%;
+    min-height: 50px;
+}
+.priority-high .priority-indicator {
+    background: red;
+}
+
+.priority-medium .priority-indicator {
+    background: orange;
+}
+
+.priority-low .priority-indicator {
+    background: blue;
+}
+
+.priority-badge {
+    padding: 5px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.priority-high .priority-badge {
+    color: red;
+    background: #ffe5e5;
+}
+
+.priority-medium .priority-badge {
+    color: #b66a00;
+    background: #fff3cd;
+}
+
+.priority-low .priority-badge {
+    color: blue;
+    background: #e5efff;
+}
+.check-wrapper {
+    position: relative;
+    width: 22px;
+    height: 22px;
+}
+
+.task-checkbox {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+}
+
+.task-title {
+    margin: 0 0 5px;
+    font-size: 16px;
+}
+
+.task-date {
+    margin: 0;
+    color: #666;
+    font-size: 13px;
+}
+
+.task-date.is-overdue {
+    color: red;
+    font-weight: bold;
+}
+
+.task-card.is-done {
+    opacity: 0.6;
+}
+
+.task-card.is-done .task-title {
+    text-decoration: line-through;
+}
+
+.empty-state {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.empty-icon {
+    margin: auto auto 10px;
+    font-size: 30px;
+}
+
+.empty-state p {
+    color: #666;
+}
+
+@media (max-width: 750px) {
+    body {
+        padding: 15px;
+    }
+
+    .task-form {
+        grid-template-columns: 1fr;
+    }
+
+    .stats {
+        flex-direction: column;
+    }
+
+    .task-card {
+        grid-template-columns: 5px 25px 1fr;
+    }
+
+    .delete-button {
+        grid-column: 3;
+        justify-self: start;
+    }
+}
