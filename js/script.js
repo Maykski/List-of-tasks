@@ -1,186 +1,287 @@
+// ELEMENTOS 
 const taskForm = document.getElementById("taskForm");
 const taskText = document.getElementById("taskText");
-const taskPriority = document.getElementById("taskPriority");
-const taskDate = document.getElementById("taskDate");
-
 const taskList = document.getElementById("taskList");
+
 const emptyState = document.getElementById("emptyState");
 const clearCompleted = document.getElementById("clearCompleted");
+const formDialog = document.getElementById("formDialog");
+const searchInput = document.getElementById("searchInput");
 
+const tabs = document.querySelectorAll(".tab");
+
+// Calendário
+const calendarTitle = document.getElementById("calendarTitle");
+const calendarDays = document.getElementById("calendarDays");
+const selectedDateLabel = document.getElementById("selectedDateLabel");
+
+// ESTADO 
+let viewYear = 0;
+let viewMonth = 0;
+let selectedDate = "";
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let currentTab = "all";
+let searchTerm = "";
 
 function saveTasks() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-function formatDate(date) {
-    const partes = date.split("-");
+// FUNÇÕES AUXILIARES
 
-    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+// Formata a data de yyyy-mm-dd para dd/mm/yyyy
+function formatDate(date) {
+    const [year, month, day] = date.split("-");
+    return `${day}/${month}/${year}`;
 }
 
+// Monta uma data no formato yyyy-mm-dd (monthIndex começa em 0)
+function toISO(year, monthIndex, day) {
+    const month = String(monthIndex + 1).padStart(2, "0");
+    const dayText = String(day).padStart(2, "0");
+    return `${year}-${month}-${dayText}`;
+}
+
+// Data de hoje no formato yyyy-mm-dd
+function todayISO() {
+    const now = new Date();
+    return toISO(now.getFullYear(), now.getMonth(), now.getDate());
+}
+
+// Converte a prioridade em uma classe CSS
+function priorityToClass(priority) {
+    switch (priority) {
+        case "Alta":
+            return "priority-high";
+        case "Média":
+            return "priority-medium";
+        default:
+            return "priority-low";
+    }
+}
+
+// Exibe a data atual, ex.: "Quinta-feira, 18 de junho"
+function showToday() {
+    const text = new Date().toLocaleDateString("pt-BR", {
+        weekday: "long",
+        day: "numeric",
+        month: "long"
+    });
+
+    document.getElementById("todayLabel").textContent =
+        text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+//ESTATÍSTICAS 
+function updateStats() {
+    const total = tasks.length;
+    const done = tasks.filter(t => t.done).length;
+    const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+
+    document.getElementById("statTotal").textContent = total;
+    document.getElementById("statDone").textContent = done;
+    document.getElementById("statPending").textContent = total - done;
+    document.getElementById("statPercent").textContent = `${percent}% do total`;
+}
+
+// RENDERIZAÇÃO 
+function getVisibleTasks() {
+    return tasks.filter(task => {
+        const matchesFilter =
+            currentTab === "all" ||
+            (currentTab === "done" && task.done) ||
+            (currentTab === "pending" && !task.done);
+
+        const matchesSearch = task.text
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
+
+        return matchesFilter && matchesSearch;
+    });
+}
+
+// Cria o elemento HTML de uma tarefa
+function createTaskElement(task) {
+    const card = document.createElement("article");
+    card.className = `task ${priorityToClass(task.priority)}`;
+    if (task.done) card.classList.add("is-done");
+
+    // Botão de marcar/desmarcar como concluída
+    const check = document.createElement("button");
+    check.className = "check";
+    check.type = "button";
+    check.textContent = task.done ? "✓" : "";
+    check.setAttribute("aria-label", "Marcar como concluída");
+    check.addEventListener("click", () => {
+        task.done = !task.done;
+        saveTasks();
+        renderTasks();
+    });
+
+    // Título e prioridade
+    const content = document.createElement("div");
+    const title = document.createElement("h3");
+    title.className = "task-title";
+    title.textContent = task.text;
+    const tag = document.createElement("span");
+    tag.className = "tag";
+    tag.textContent = task.priority;
+    content.append(title, tag);
+
+    // Data e botão de excluir
+    const side = document.createElement("div");
+    side.className = "task-side";
+    const date = document.createElement("span");
+    date.className = "task-date";
+    date.textContent = formatDate(task.date);
+    if (!task.done && task.date < todayISO()) date.classList.add("is-overdue");
+    const remove = document.createElement("button");
+    remove.className = "delete-button";
+    remove.type = "button";
+    remove.textContent = "Excluir";
+    remove.addEventListener("click", () => {
+        tasks = tasks.filter(item => item.id !== task.id);
+        saveTasks();
+        renderTasks();
+    });
+    side.append(date, remove);
+
+    card.append(check, content, side);
+    return card;
+}
+
+// Renderiza a lista de tarefas na tela
 function renderTasks() {
+    const visible = getVisibleTasks();
 
     taskList.innerHTML = "";
+    visible.forEach(task => taskList.appendChild(createTaskElement(task)));
 
-    tasks.forEach(function(task) {
+    emptyState.style.display = visible.length === 0 ? "block" : "none";
+    document.getElementById("taskCount").textContent =
+        `${visible.length} ${visible.length === 1 ? "tarefa" : "tarefas"}`;
 
-        const card = document.createElement("article");
-        const indicator = document.createElement("div");
-        const checkbox = document.createElement("input");
-        const content = document.createElement("div");
-        const title = document.createElement("h3");
-        const badge = document.createElement("span");
-        const date = document.createElement("p");
-        const deleteButton = document.createElement("button");
+    updateStats();
+}
 
+// CALENDÁRIO
+function renderCalendar() {
+    const firstDay = new Date(viewYear, viewMonth, 1);
+    const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
 
-        card.className = "task-card";
-        indicator.className = "priority-indicator";
-        checkbox.className = "task-checkbox";
-        content.className = "task-content";
-        title.className = "task-title";
-        badge.className = "priority-badge";
-        date.className = "task-date";
-        deleteButton.className = "delete-button";
-
-
-        if (task.priority === "Alta") {
-
-            card.classList.add("priority-high");
-
-        } else if (task.priority === "Média") {
-
-            card.classList.add("priority-medium");
-
-        } else {
-
-            card.classList.add("priority-low");
-
-        }
-
-        if (task.done) {
-            card.classList.add("is-done");
-        }
-
-
-        checkbox.type = "checkbox";
-        checkbox.checked = task.done;
-
-        title.textContent = task.text;
-
-        badge.textContent = task.priority;
-
-        date.textContent =
-            "Prazo: " + formatDate(task.date);
-
-        deleteButton.textContent = "Excluir";
-
-
-        // MARCAR COMO CONCLUÍDA
-        checkbox.addEventListener("change", function() {
-
-            task.done = checkbox.checked;
-
-            saveTasks();
-            renderTasks();
-
-        });
-
-
-        deleteButton.addEventListener("click", function() {
-
-            tasks = tasks.filter(function(item) {
-
-                return item.id !== task.id;
-
-            });
-
-            saveTasks();
-            renderTasks();
-
-        });
-
-
-        content.appendChild(title);
-        content.appendChild(badge);
-        content.appendChild(date);
-
-        card.appendChild(indicator);
-        card.appendChild(checkbox);
-        card.appendChild(content);
-        card.appendChild(deleteButton);
-
-        taskList.appendChild(card);
-
+    calendarTitle.textContent = firstDay.toLocaleDateString("pt-BR", {
+        month: "long",
+        year: "numeric"
     });
 
+    calendarDays.innerHTML = "";
 
-    if (tasks.length === 0) {
+    // Espaços vazios antes do dia 1
+    for (let i = 0; i < firstDay.getDay(); i++) {
+        calendarDays.appendChild(document.createElement("span"));
+    }
 
-        emptyState.style.display = "block";
+    // Um botão para cada dia do mês
+    for (let day = 1; day <= daysInMonth; day++) {
+        const iso = toISO(viewYear, viewMonth, day);
+        const button = document.createElement("button");
 
-    } else {
+        button.type = "button";
+        button.className = "day";
+        button.textContent = day;
 
-        emptyState.style.display = "none";
+        if (iso === todayISO()) button.classList.add("is-today");
+        if (iso === selectedDate) button.classList.add("is-selected");
 
+        button.addEventListener("click", () => {
+            selectedDate = iso;
+            selectedDateLabel.textContent = "Prazo: " + formatDate(iso);
+            renderCalendar();
+        });
+
+        calendarDays.appendChild(button);
     }
 }
 
+function changeMonth(step) {
+    viewMonth += step;
 
-taskForm.addEventListener("submit", function(event) {
+    if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+    if (viewMonth < 0) { viewMonth = 11; viewYear--; }
 
-    event.preventDefault();
+    renderCalendar();
+}
 
+// EVENTOS
 
-    const task = {
-
-        id: Date.now(),
-
-        text: taskText.value.trim(),
-
-        priority: taskPriority.value,
-
-        date: taskDate.value,
-
-        done: false
-
-    };
-
-
-    if (task.text === "" || task.date === "") {
-        return;
-    }
-
-
-    tasks.push(task);
-
-    saveTasks();
-
-    renderTasks();
-
-
-    taskForm.reset();
-
-    taskPriority.value = "Média";
-
+// Abas: Todas / Pendentes / Concluídas
+tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("is-active"));
+        tab.classList.add("is-active");
+        currentTab = tab.dataset.filter;
+        renderTasks();
+    });
 });
 
+// Busca
+searchInput.addEventListener("input", () => {
+    searchTerm = searchInput.value;
+    renderTasks();
+});
 
-clearCompleted.addEventListener("click", function() {
+// Abrir o modal
+document.getElementById("openForm").addEventListener("click", () => {
+    const now = new Date();
 
-    tasks = tasks.filter(function(task) {
+    viewYear = now.getFullYear();
+    viewMonth = now.getMonth();
+    selectedDate = todayISO();
+    selectedDateLabel.textContent = "Prazo: " + formatDate(selectedDate);
 
-        return !task.done;
+    renderCalendar();
+    formDialog.showModal();
+    taskText.focus();
+});
 
+// Fechar o modal sem adicionar
+document.getElementById("cancelForm").addEventListener("click", () => {
+    formDialog.close();
+});
+
+// Navegar entre os meses
+document.getElementById("prevMonth").addEventListener("click", () => changeMonth(-1));
+document.getElementById("nextMonth").addEventListener("click", () => changeMonth(1));
+
+// Adicionar a tarefa
+taskForm.addEventListener("submit", event => {
+    event.preventDefault();
+
+    const text = taskText.value.trim();
+    if (text === "" || selectedDate === "") return;
+
+    tasks.push({
+        id: Date.now(),
+        text,
+        priority: taskForm.elements.priority.value,
+        date: selectedDate,
+        done: false
     });
 
     saveTasks();
-
     renderTasks();
-
+    taskForm.reset();
+    formDialog.close();
 });
 
+// Limpar concluídas
+clearCompleted.addEventListener("click", () => {
+    tasks = tasks.filter(task => !task.done);
+    saveTasks();
+    renderTasks();
+});
 
+//  INÍCIO 
+showToday();
 renderTasks();

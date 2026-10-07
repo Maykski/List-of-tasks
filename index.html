@@ -3,97 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Tarefas</title>
+    <title>Meu dia</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style/style.css">
 </head>
 
 <body>
 
-    <main class="app-shell">
+    <header class="topbar">
+        <div class="search">
+            <input type="search" id="searchInput" placeholder="Buscar tarefas..." aria-label="Buscar tarefas">
+        </div>
+        <div class="user">
+            <span class="avatar" aria-hidden="true">MS</span>
+            <div class="user-info">
+                <strong>Marina Silva</strong>
+                <span>Plano pessoal</span>
+            </div>
+        </div>
+    </header>
 
-        <header class="app-header">
-            <h1>Lista de Tarefas</h1>
-            <p class="subtitle">
-                Organize suas tarefas, prioridades e prazos.
-            </p>
-        </header>
+    <main class="page">
 
-        <section class="form-card">
-            <h2>Adicionar tarefa</h2>
-
-            <form id="taskForm" class="task-form">
-
-                <div class="field field-description">
-                    <label for="taskText">Tarefa</label>
-
-                    <input
-                        type="text"
-                        id="taskText"
-                        placeholder="Ex.: Estudar JavaScript"
-                        required
-                    >
-                </div>
-
-                <div class="field">
-                    <label for="taskPriority">Prioridade</label>
-
-                    <select id="taskPriority">
-                        <option value="Alta">Alta</option>
-                        <option value="Média" selected>Média</option>
-                        <option value="Baixa">Baixa</option>
-                    </select>
-                </div>
-
-                <div class="field">
-                    <label for="taskDate">Prazo</label>
-
-                    <input
-                        type="date"
-                        id="taskDate"
-                        required
-                    >
-                </div>
-
-                <button class="primary-button" type="submit">
-                    Adicionar
-                </button>
-
-            </form>
+        <section class="hero">
+            <div>
+                <p class="today" id="todayLabel"></p>
+                <h1>Meu dia</h1>
+                <p class="subtitle">Organize o que importa e faça hoje valer a pena.</p>
+            </div>
+            <button class="primary-button" id="openForm" type="button">+ Nova tarefa</button>
         </section>
 
-        <section class="tasks-section">
+        <section class="stats" aria-label="Resumo">
+            <article class="stat">
+                <span class="stat-number tone-indigo" id="statTotal">0</span>
+                <div><strong>Tarefas de hoje</strong><span>em sua lista</span></div>
+            </article>
+            <article class="stat">
+                <span class="stat-number tone-green" id="statDone">0</span>
+                <div><strong>Concluídas</strong><span id="statPercent">0% do total</span></div>
+            </article>
+            <article class="stat">
+                <span class="stat-number tone-orange" id="statPending">0</span>
+                <div><strong>Pendentes</strong><span>mantenha o ritmo</span></div>
+            </article>
+        </section>
 
-            <div class="tasks-heading">
-                <h2>Minhas tarefas</h2>
-
-                <button
-                    id="clearCompleted"
-                    class="secondary-button"
-                    type="button"
-                >
-                    Limpar concluídas
-                </button>
+        <section class="panel">
+            <div class="panel-head">
+                <div class="tabs" role="tablist">
+                    <button class="tab is-active" data-filter="all" role="tab" type="button">Todas</button>
+                    <button class="tab" data-filter="pending" role="tab" type="button">Pendentes</button>
+                    <button class="tab" data-filter="done" role="tab" type="button">Concluídas</button>
+                </div>
+                <span class="count" id="taskCount"></span>
             </div>
 
             <div id="taskList" class="task-list"></div>
 
             <div id="emptyState" class="empty-state">
-                <div class="empty-icon">✓</div>
-
-                <h3>Nenhuma tarefa</h3>
-
-                <p>
-                    Adicione uma tarefa usando o formulário acima.
-                </p>
+                <h3>Nenhuma tarefa por aqui</h3>
+                <p>Clique em “Nova tarefa” para começar o seu dia.</p>
             </div>
 
+            <button id="clearCompleted" class="link-button" type="button">Limpar concluídas</button>
         </section>
 
     </main>
 
-    <script src="script.js"></script>
+    <dialog id="formDialog" class="dialog">
+        <form id="taskForm" class="task-form">
+            <h2>Nova tarefa</h2>
 
+            <div class="dialog-grid">
+
+                <div class="dialog-left">
+                    <div class="field">
+                        <label for="taskText">Nome da atividade</label>
+                        <input type="text" id="taskText" placeholder="Ex.: Estudar JavaScript" required>
+                    </div>
+
+                    <fieldset class="priority-group">
+                        <legend>Prioridade</legend>
+                        <div class="priority-options">
+                            <label class="priority-option priority-low">
+                                <input type="radio" name="priority" value="Baixa">
+                                <span>Baixa</span>
+                            </label>
+                            <label class="priority-option priority-medium">
+                                <input type="radio" name="priority" value="Média" checked>
+                                <span>Média</span>
+                            </label>
+                            <label class="priority-option priority-high">
+                                <input type="radio" name="priority" value="Alta">
+                                <span>Alta</span>
+                            </label>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="dialog-right">
+                    <span class="label">Prazo</span>
+                    <div class="calendar">
+                        <div class="calendar-head">
+                            <button type="button" id="prevMonth" aria-label="Mês anterior">‹</button>
+                            <strong id="calendarTitle"></strong>
+                            <button type="button" id="nextMonth" aria-label="Próximo mês">›</button>
+                        </div>
+                        <div class="calendar-weekdays">
+                            <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
+                        </div>
+                        <div id="calendarDays" class="calendar-days"></div>
+                    </div>
+                    <p id="selectedDateLabel" class="selected-date"></p>
+                </div>
+
+            </div>
+
+            <div class="dialog-actions">
+                <button type="button" id="cancelForm" class="secondary-button">Cancelar</button>
+                <button type="submit" class="primary-button">Adicionar</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script src="/script/meu-script.js" defer></script>
 </body>
 </html>
-
