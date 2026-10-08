@@ -1,0 +1,122 @@
+/* Fundo escurecido atrás do menu */
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    background: rgba(28, 25, 23, 0.35);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s, visibility 0.25s;
+}
+.sidebar-overlay.is-open { opacity: 1; visibility: visible; }
+
+/* O menu em si: começa fora da tela */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 300px;
+    max-width: 85vw;
+    padding: 20px 16px;
+    overflow-y: auto;
+    border-right: 1px solid var(--border);
+    background: var(--bg);
+    transform: translateX(-100%);
+    visibility: hidden; /* tira os links do Tab quando fechado */
+    transition: transform 0.25s ease, visibility 0.25s;
+}
+.sidebar.is-open { transform: translateX(0); visibility: visible; }
+
+.sidebar-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; font-size: 20px; }
+
+.brand-logo {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: var(--primary);
+    color: #fff;
+}
+
+.icon-button {
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 18px;
+}
+.icon-button:hover { background: #efece5; color: var(--text); }
+
+/* Itens de navegação e de pastas */
+.sidebar-nav, .folder-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    color: var(--muted);
+    text-decoration: none;
+}
+.nav-item span { flex: 1; }
+.nav-item small { font-size: 12px; font-weight: 600; }
+.nav-item:hover { background: #efece5; }
+
+.nav-item.is-active {
+    background: var(--surface);
+    color: var(--primary);
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.sidebar-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding: 0 8px 0 14px;
+}
+
+.section-title {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+/* Cartão de progresso (empurrado para o fim do menu) */
+.weekly-card {
+    margin-top: auto;
+    padding: 16px;
+    border-radius: 16px;
+    background: #ebe7dc;
+    font-size: 13px;
+}
+.weekly-top { display: flex; justify-content: space-between; }
+.weekly-bar { height: 6px; margin: 10px 0; border-radius: 99px; background: #d6d3d1; overflow: hidden; }
+.weekly-bar span { display: block; height: 100%; background: var(--primary); }
+.weekly-card p { margin: 0; color: var(--muted); font-size: 12px; }

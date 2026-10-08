@@ -1,4 +1,7 @@
-// ELEMENTOS 
+import { initHeader } from "../components/header/header.js";
+import { initSidebar } from "../components/sidebar/sidebar.js";
+
+// ELEMENTOS
 const taskForm = document.getElementById("taskForm");
 const taskText = document.getElementById("taskText");
 const taskList = document.getElementById("taskList");
@@ -6,7 +9,6 @@ const taskList = document.getElementById("taskList");
 const emptyState = document.getElementById("emptyState");
 const clearCompleted = document.getElementById("clearCompleted");
 const formDialog = document.getElementById("formDialog");
-const searchInput = document.getElementById("searchInput");
 
 const tabs = document.querySelectorAll(".tab");
 
@@ -15,7 +17,7 @@ const calendarTitle = document.getElementById("calendarTitle");
 const calendarDays = document.getElementById("calendarDays");
 const selectedDateLabel = document.getElementById("selectedDateLabel");
 
-// ESTADO 
+// ESTADO
 let viewYear = 0;
 let viewMonth = 0;
 let selectedDate = "";
@@ -73,7 +75,7 @@ function showToday() {
         text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-//ESTATÍSTICAS 
+// ESTATÍSTICAS
 function updateStats() {
     const total = tasks.length;
     const done = tasks.filter(t => t.done).length;
@@ -85,7 +87,7 @@ function updateStats() {
     document.getElementById("statPercent").textContent = `${percent}% do total`;
 }
 
-// RENDERIZAÇÃO 
+// RENDERIZAÇÃO
 function getVisibleTasks() {
     return tasks.filter(task => {
         const matchesFilter =
@@ -213,6 +215,16 @@ function changeMonth(step) {
     renderCalendar();
 }
 
+// BUSCA (precisa rodar depois que o header existe)
+function setupSearch() {
+    const searchInput = document.getElementById("searchInput");
+
+    searchInput.addEventListener("input", () => {
+        searchTerm = searchInput.value;
+        renderTasks();
+    });
+}
+
 // EVENTOS
 
 // Abas: Todas / Pendentes / Concluídas
@@ -223,12 +235,6 @@ tabs.forEach(tab => {
         currentTab = tab.dataset.filter;
         renderTasks();
     });
-});
-
-// Busca
-searchInput.addEventListener("input", () => {
-    searchTerm = searchInput.value;
-    renderTasks();
 });
 
 // Abrir o modal
@@ -282,6 +288,13 @@ clearCompleted.addEventListener("click", () => {
     renderTasks();
 });
 
-//  INÍCIO 
-showToday();
-renderTasks();
+// INÍCIO
+async function init() {
+    await initHeader();    
+    await initSidebar();   
+    setupSearch();
+    showToday();
+    renderTasks();
+}
+
+init();

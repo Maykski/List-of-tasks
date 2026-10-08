@@ -29,42 +29,6 @@ button { cursor: pointer; }
     outline-offset: 2px;
 }
 
-/* ---------- 3. BARRA SUPERIOR ---------- */
-.topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 16px 32px;
-    border-bottom: 1px solid var(--border);
-}
-
-.search { flex: 1; max-width: 360px; }
-
-.search input {
-    width: 100%;
-    padding: 12px 16px;
-    border: 0;
-    border-radius: 12px;
-    background: #efece5;
-}
-
-.user { display: flex; align-items: center; gap: 12px; }
-
-.avatar {
-    display: grid;
-    place-items: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: #e5d9cb;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.user-info { display: flex; flex-direction: column; font-size: 13px; }
-.user-info span { color: var(--muted); font-size: 11px; }
-
 /* ---------- 4. LAYOUT DA PÁGINA ---------- */
 .page {
     max-width: 960px;
