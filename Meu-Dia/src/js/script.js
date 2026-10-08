@@ -10,7 +10,7 @@ const emptyState = document.getElementById("emptyState");
 const clearCompleted = document.getElementById("clearCompleted");
 const formDialog = document.getElementById("formDialog");
 
-const tabs = document.querySelectorAll(".tab");
+const tabs = document.querySelectorAll(".tab"); // Todas / Pendentes / Concluídas
 
 // Calendário
 const calendarTitle = document.getElementById("calendarTitle");
