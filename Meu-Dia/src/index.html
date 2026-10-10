@@ -5,127 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu dia</title>
 
+    <link rel="icon" href="../public/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
 
+    <!-- Um único CSS: ele importa todos os outros -->
     <link rel="stylesheet" href="styles/style.css">
-    <link rel="stylesheet" href="components/header/header.css">
-
-    <link rel="stylesheet" href="components/sidebar/sidebar.css">
-
 </head>
 
 <body>
 
-    <div id="header-placeholder"></div>
-    <div id="sidebar-placeholder"></div>
+    <!-- Esqueleto da página: cada div vazia recebe um componente via JS -->
+    <div class="app">
+        <div id="sidebar"></div>
+ 
+        <div class="app-main">
+            <div id="header"></div>
+            <main id="page" class="page"></main>
+            <div id="footer"></div>
+        </div>
+    </div>
 
-    <main class="page">
-
-        <section class="hero">
-            <div>
-                <p class="today" id="todayLabel"></p>
-                <h1>Meu dia</h1>
-                <p class="subtitle">Organize o que importa e faça hoje valer a pena.</p>
-            </div>
-            <button class="primary-button" id="openForm" type="button">+ Nova tarefa</button>
-        </section>
-
-        <section class="stats" aria-label="Resumo">
-            <article class="stat">
-                <span class="stat-number tone-indigo" id="statTotal">0</span>
-                <div><strong>Tarefas de hoje</strong><span>em sua lista</span></div>
-            </article>
-            <article class="stat">
-                <span class="stat-number tone-green" id="statDone">0</span>
-                <div><strong>Concluídas</strong><span id="statPercent">0% do total</span></div>
-            </article>
-            <article class="stat">
-                <span class="stat-number tone-orange" id="statPending">0</span>
-                <div><strong>Pendentes</strong><span>mantenha o ritmo</span></div>
-            </article>
-        </section>
-
-        <section class="panel">
-            <div class="panel-head">
-                <div class="tabs" role="tablist">
-                    <button class="tab is-active" data-filter="all" role="tab" type="button">Todas</button>
-                    <button class="tab" data-filter="pending" role="tab" type="button">Pendentes</button>
-                    <button class="tab" data-filter="done" role="tab" type="button">Concluídas</button>
-                </div>
-                <span class="count" id="taskCount"></span>
-            </div>
-
-            <div id="taskList" class="task-list"></div>
-
-            <div id="emptyState" class="empty-state">
-                <h3>Nenhuma tarefa por aqui</h3>
-                <p>Clique em “Nova tarefa” para começar o seu dia.</p>
-            </div>
-
-            <button id="clearCompleted" class="link-button" type="button">Limpar concluídas</button>
-        </section>
-
-    </main>
-
-    <dialog id="formDialog" class="dialog">
-        <form id="taskForm" class="task-form">
-            <h2>Nova tarefa</h2>
-
-            <div class="dialog-grid">
-
-                <div class="dialog-left">
-                    <div class="field">
-                        <label for="taskText">Nome da atividade</label>
-                        <input type="text" id="taskText" placeholder="Ex.: Estudar JavaScript" required>
-                    </div>
-
-                    <fieldset class="priority-group">
-                        <legend>Prioridade</legend>
-                        <div class="priority-options">
-                            <label class="priority-option priority-low">
-                                <input type="radio" name="priority" value="Baixa">
-                                <span>Baixa</span>
-                            </label>
-                            <label class="priority-option priority-medium">
-                                <input type="radio" name="priority" value="Média" checked>
-                                <span>Média</span>
-                            </label>
-                            <label class="priority-option priority-high">
-                                <input type="radio" name="priority" value="Alta">
-                                <span>Alta</span>
-                            </label>
-                        </div>
-                    </fieldset>
-                </div>
-
-                <div class="dialog-right">
-                    <span class="label">Prazo</span>
-                    <div class="calendar">
-                        <div class="calendar-head">
-                            <button type="button" id="prevMonth" aria-label="Mês anterior">‹</button>
-                            <strong id="calendarTitle"></strong>
-                            <button type="button" id="nextMonth" aria-label="Próximo mês">›</button>
-                        </div>
-                        <div class="calendar-weekdays">
-                            <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
-                        </div>
-                        <div id="calendarDays" class="calendar-days"></div>
-                    </div>
-                    <p id="selectedDateLabel" class="selected-date"></p>
-                </div>
-
-            </div>
-
-            <div class="dialog-actions">
-                <button type="button" id="cancelForm" class="secondary-button">Cancelar</button>
-                <button type="submit" class="primary-button">Adicionar</button>
-            </div>
-        </form>
-    </dialog>
-
-    <script type="module" src="js/script.js"></script>
+    <script type="module" src="/src/js/script.js"></script>
 </body>
 </html>
